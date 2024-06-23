@@ -10,7 +10,13 @@
         android:id="@+id/widget_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello, world"
+        android:text="@string/default_number"
         android:textSize="18sp"
         android:textColor="@android:color/black" />
+
+    <Button
+        android:id="@+id/widget_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/refresh" />
 </LinearLayout>
