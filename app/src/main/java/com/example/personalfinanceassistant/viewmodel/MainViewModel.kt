@@ -1,25 +1,46 @@
 package com.example.personalfinanceassistant.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.personalfinanceassistant.model.RandomNumber
-import com.example.personalfinanceassistant.repository.RandomRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import com.example.personalfinanceassistant.service.RetrofitInstance
+import com.example.personalfinanceassistant.model.SheetResponse
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
+class MainViewModel : ViewModel() {
 
-class MainViewModel (application: Application) : AndroidViewModel(application) {
-    private val dataRepository = RandomRepository(application.applicationContext)
+    private val apiKey = "API_KEY"
+    private val spreadsheetId = "SPREADSHEET_ID"
+    private val range = "Analysis!A1"
 
-    private val _randomNumber = MutableStateFlow(dataRepository.getRandomNumber().randomNumber)
-    val randomNumber: StateFlow<Int> = _randomNumber
+    private val _cellValue = MutableLiveData<String>()
+    val cellValue: LiveData<String> = _cellValue
 
-    fun generateRandomNumber() {
-        viewModelScope.launch {
-            val dataModel: RandomNumber = dataRepository.newRandomNumber()
-            _randomNumber.value = dataModel.randomNumber
+    init {
+        fetchCellValue()
+    }
+
+    fun fetchCellValue() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val call = RetrofitInstance.api.getSheetData(spreadsheetId, range, apiKey)
+            call.enqueue(object : Callback<SheetResponse> {
+                override fun onResponse(call: Call<SheetResponse>, response: Response<SheetResponse>) {
+                    if (response.isSuccessful) {
+                        _cellValue.postValue(response.body()?.values?.get(0)?.get(0) ?: "No data")
+                    } else {
+                        _cellValue.postValue("Error: ${response.message()}")
+                    }
+                }
+
+                override fun onFailure(call: Call<SheetResponse>, t: Throwable) {
+                    _cellValue.postValue("Failure: ${t.message}")
+                }
+            })
         }
     }
 }

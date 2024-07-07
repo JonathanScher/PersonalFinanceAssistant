@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
+
 android {
     namespace = "com.example.personalfinanceassistant"
     compileSdk = 34
@@ -19,6 +20,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
     }
 
     buildTypes {
@@ -45,7 +47,10 @@ android {
     }
     packaging {
         resources {
-            excludes += setOf("/META-INF/{AL2.0,LGPL2.1}")
+            excludes += setOf("/META-INF/{AL2.0,LGPL2.1}",
+                "/META-INF/DEPENDENCIES",
+                "/META-INF/LICENSE",
+                "/META-INF/INDEX.LIST")
         }
     }
 }
@@ -60,6 +65,11 @@ dependencies {
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.google.api.client.android)
+    implementation(libs.google.api.services.sheets)
+    implementation(libs.androidx.runtime.livedata)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
