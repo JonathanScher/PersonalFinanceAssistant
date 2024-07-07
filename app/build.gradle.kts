@@ -1,9 +1,19 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     alias(libs.plugins.compose.compiler)
 }
 
+val keyPropertiesFile = rootProject.file("key.properties")
+val keyProperties = Properties()
+if (keyPropertiesFile.exists()) {
+    keyProperties.load(FileInputStream(keyPropertiesFile))
+} else {
+    throw GradleException("key.properties file not found. Please create it in the project root directory.")
+}
 
 android {
     namespace = "com.example.personalfinanceassistant"
@@ -21,6 +31,8 @@ android {
             useSupportLibrary = true
         }
 
+        buildConfigField("String", "API_KEY", keyProperties["API_KEY"] as String)
+        buildConfigField("String", "SPREADSHEET_ID", keyProperties["SPREADSHEET_ID"] as String)
     }
 
     buildTypes {
@@ -41,6 +53,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"

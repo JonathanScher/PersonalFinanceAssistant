@@ -1,4 +1,5 @@
 package com.example.personalfinanceassistant.viewmodel
+import com.example.personalfinanceassistant.BuildConfig
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,8 +15,8 @@ import retrofit2.Response
 
 class MainViewModel : ViewModel() {
 
-    private val apiKey = "API_KEY"
-    private val spreadsheetId = "SPREADSHEET_ID"
+    private val apiKey = BuildConfig.API_KEY
+    private val spreadsheetId = BuildConfig.SPREADSHEET_ID
     private val range = "Analysis!A1"
 
     private val _cellValue = MutableLiveData<String>()
