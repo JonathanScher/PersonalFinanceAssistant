@@ -4,6 +4,7 @@ import java.util.Properties
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.gms.google-services")
     alias(libs.plugins.compose.compiler)
 }
 
@@ -17,7 +18,7 @@ if (keyPropertiesFile.exists()) {
 
 android {
     namespace = "com.example.personalfinanceassistant"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.personalfinanceassistant"
@@ -69,6 +70,10 @@ android {
 }
 
 dependencies {
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -83,6 +88,10 @@ dependencies {
     implementation(libs.google.api.client.android)
     implementation(libs.google.api.services.sheets)
     implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.play.services.auth)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.auth.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
